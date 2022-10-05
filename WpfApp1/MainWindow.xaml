@@ -1,0 +1,407 @@
+﻿<Window
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
+        xmlns:local="clr-namespace:WpfApp1"
+        xmlns:System="clr-namespace:System;assembly=System.Runtime" x:Name="mainWindow" x:Class="WpfApp1.MainWindow"
+        mc:Ignorable="d"
+        Title="Input Window" Height="645" Width="1200" SizeChanged="mainWindow_SizeChanged">
+    <DockPanel LastChildFill="False">
+        <DockPanel LastChildFill="False" DockPanel.Dock="Top">
+            <Menu DockPanel.Dock="Top">
+                <MenuItem Header="_File">
+                    <MenuItem Header="_Import" FontSize="12" Click="On_ImportClick"/>
+                    <MenuItem Header="_Export" FontSize="12" Click="On_ExportClick"/>
+                    <MenuItem Header="_Exit" FontSize="12" Click="On_ExitClick"/>
+                </MenuItem>
+            </Menu>
+            <ScrollViewer DockPanel.Dock="Top" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto">
+                <Grid ScrollViewer.VerticalScrollBarVisibility="Auto" ScrollViewer.HorizontalScrollBarVisibility="Visible" Height="80" MaxHeight="60" MinHeight="40">
+                    <Grid.RowDefinitions>
+                        <RowDefinition/>
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition MaxWidth="200" MinWidth="150" Width="100*"/>
+                        <ColumnDefinition MaxWidth="200" MinWidth="150" Width="100*"/>
+                        <ColumnDefinition MaxWidth="200" MinWidth="150" Width="100*"/>
+                        <ColumnDefinition MaxWidth="200" MinWidth="150" Width="100*"/>
+                    </Grid.ColumnDefinitions>
+                    <GroupBox Header="Tempo" MinWidth="150">
+                        <xctk:IntegerUpDown x:Name="tempoUpDown" HorizontalAlignment="Center" VerticalAlignment="Center" Width="67" MaxLength="3" Increment="5" Maximum="999" Minimum="30" DefaultValue="120" Text="120"/>
+                    </GroupBox>
+                    <GroupBox Grid.Column="1" Header="Quantize" MinWidth="150">
+                        <ComboBox x:Name="quantizeComboBox" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="-1,0,0,0" SelectedIndex="0" SelectionChanged="On_QuantizeSelectionChange">
+                            <ComboBoxItem Content="32nd Thirty-Second"/>
+                            <ComboBoxItem Content="16th Sixteenth"/>
+                            <ComboBoxItem Content="8th Eighth"/>
+                            <ComboBoxItem Content="4th Quarter"/>
+                        </ComboBox>
+                    </GroupBox>
+                    <GroupBox Grid.Column="2" Header="Add Columns&#xA;" MinWidth="150">
+                        <Grid>
+                            <Grid.RowDefinitions>
+                                <RowDefinition/>
+                            </Grid.RowDefinitions>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="2*"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+                            <xctk:IntegerUpDown x:Name="columnUpDown" Grid.Column="0" MaxLength="3" Increment="1" Maximum="999" Minimum="1" DefaultValue="10" Text="10"/>
+                            <Button Content="Add" Grid.Column="1" Height="21" Margin="10,0,3,0" Click="On_ColumnButtonClick"/>
+                        </Grid>
+                    </GroupBox>
+                    <GroupBox Grid.Column="3" Header="Generate" MinWidth="150" Margin="0,0,-99,0">
+                        <Grid>
+                            <Grid.RowDefinitions>
+                                <RowDefinition/>
+                            </Grid.RowDefinitions>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="2*"/>
+                                <ColumnDefinition/>
+                            </Grid.ColumnDefinitions>
+                            <Button Content="Generate" Grid.Column="1" HorizontalAlignment="Stretch" VerticalAlignment="Center" Click="generateAudioButton_Click"/>
+                            <Grid>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition/>
+                                    <RowDefinition/>
+                                </Grid.RowDefinitions>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition/>
+                                    <ColumnDefinition/>
+                                </Grid.ColumnDefinitions>
+                                <TextBox x:Name="noteFileTextBox" Grid.Column="1" HorizontalAlignment="Stretch" TextWrapping="Wrap" VerticalAlignment="Stretch" Text="notes" Grid.ColumnSpan="2"/>
+                                <Label Content="Note File:" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="0,-5,0,0"/>
+                                <Label Content="Voicebank:" Margin="0,-5,0,0" Grid.Row="1"/>
+                                <ComboBox x:Name="languageComboBox" Grid.Column="1" Grid.Row="1" SelectedIndex="0">
+                                    <ComboBoxItem Content="English"/>
+                                    <ComboBoxItem Content="French"/>
+                                    <ComboBoxItem Content="Chinese"/>
+                                    <ComboBoxItem Content="Japanese"/>
+                                    <ComboBoxItem Content="Cantonese"/>
+                                </ComboBox>
+                                <ComboBox x:Name="voiceComboBox" Grid.Column="2" Grid.Row="1" SelectedIndex="0">
+                                    <ComboBoxItem Content="Male"/>
+                                    <ComboBoxItem Content="Female"/>
+                                </ComboBox>
+                            </Grid>
+                        </Grid>
+                    </GroupBox>
+                </Grid>
+            </ScrollViewer>
+        </DockPanel>
+        <StackPanel Orientation="Horizontal" DockPanel.Dock="Bottom">
+            <ScrollViewer x:Name="keyScrollViewer" Width="80" HorizontalAlignment="Left" VerticalScrollBarVisibility="Hidden" ScrollChanged="keyScrollViewer_ScrollChanged" >
+                <Grid x:Name="pianoRollGrid_Copy" Height="2024" Background="#00000000" PreviewMouseLeftButtonDown="OnPreviewMouseLeftButtonDown" PreviewMouseLeftButtonUp="pianoRollGrid_PreviewMouseLeftButtonUp" ScrollViewer.VerticalScrollBarVisibility="Visible">
+                    <Grid.RowDefinitions>
+                        <RowDefinition/>
+                        <RowDefinition/>
+                        <RowDefinition/>
+                        <RowDefinition/>
+                        <RowDefinition/>
+                        <RowDefinition/>
+                        <RowDefinition/>
+                        <RowDefinition/>
+                        <RowDefinition/>
+                        <RowDefinition/>
+                        <RowDefinition/>
+                        <RowDefinition/>
+                        <RowDefinition/>
+                        <RowDefinition/>
+                        <RowDefinition/>
+                        <RowDefinition/>
+                        <RowDefinition/>
+                        <RowDefinition/>
+                        <RowDefinition/>
+                        <RowDefinition/>
+                        <RowDefinition/>
+                        <RowDefinition/>
+                        <RowDefinition/>
+                        <RowDefinition/>
+                        <RowDefinition/>
+                        <RowDefinition/>
+                        <RowDefinition/>
+                        <RowDefinition/>
+                        <RowDefinition/>
+                        <RowDefinition/>
+                        <RowDefinition/>
+                        <RowDefinition/>
+                        <RowDefinition/>
+                        <RowDefinition/>
+                        <RowDefinition/>
+                        <RowDefinition/>
+                        <RowDefinition/>
+                        <RowDefinition/>
+                        <RowDefinition/>
+                        <RowDefinition/>
+                        <RowDefinition/>
+                        <RowDefinition/>
+                        <RowDefinition/>
+                        <RowDefinition/>
+                        <RowDefinition/>
+                        <RowDefinition/>
+                        <RowDefinition/>
+                        <RowDefinition/>
+                        <RowDefinition/>
+                        <RowDefinition/>
+                        <RowDefinition/>
+                        <RowDefinition/>
+                        <RowDefinition/>
+                        <RowDefinition/>
+                        <RowDefinition/>
+                        <RowDefinition/>
+                        <RowDefinition/>
+                        <RowDefinition/>
+                        <RowDefinition/>
+                        <RowDefinition/>
+                        <RowDefinition/>
+                        <RowDefinition/>
+                        <RowDefinition/>
+                        <RowDefinition/>
+                        <RowDefinition/>
+                        <RowDefinition/>
+                        <RowDefinition/>
+                        <RowDefinition/>
+                        <RowDefinition/>
+                        <RowDefinition/>
+                        <RowDefinition/>
+                        <RowDefinition/>
+                        <RowDefinition/>
+                        <RowDefinition/>
+                        <RowDefinition/>
+                        <RowDefinition/>
+                        <RowDefinition/>
+                        <RowDefinition/>
+                        <RowDefinition/>
+                        <RowDefinition/>
+                        <RowDefinition/>
+                        <RowDefinition/>
+                        <RowDefinition/>
+                        <RowDefinition/>
+                        <RowDefinition/>
+                        <RowDefinition/>
+                        <RowDefinition/>
+                        <RowDefinition/>
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition/>
+                    </Grid.ColumnDefinitions>
+                    <Rectangle HorizontalAlignment="Stretch" Stroke="Black" VerticalAlignment="Stretch" Width="80" Fill="White"/>
+                    <TextBlock Margin="0,0,3,0" TextAlignment="Right" Text="8" Grid.Row="0"/>
+                    <Rectangle Grid.Row="1" HorizontalAlignment="Stretch" Stroke="Black" VerticalAlignment="Stretch" Width="80" Fill="White"/>
+                    <Rectangle Grid.Row="2" HorizontalAlignment="Stretch" Stroke="Black" VerticalAlignment="Stretch" Width="80" Fill="Black"/>
+                    <Rectangle Grid.Row="3" HorizontalAlignment="Stretch" Stroke="Black" VerticalAlignment="Stretch" Width="80" Fill="White"/>
+                    <Rectangle Grid.Row="4" HorizontalAlignment="Stretch" Stroke="Black" VerticalAlignment="Stretch" Width="80" Fill="Black"/>
+                    <Rectangle Grid.Row="5" HorizontalAlignment="Stretch" Stroke="Black" VerticalAlignment="Stretch" Width="80" Fill="White"/>
+                    <Rectangle Grid.Row="6" HorizontalAlignment="Stretch" Stroke="Black" VerticalAlignment="Stretch" Width="80" Fill="Black"/>
+                    <Rectangle Grid.Row="7" HorizontalAlignment="Stretch" Stroke="Black" VerticalAlignment="Stretch" Width="80" Fill="White"/>
+                    <Rectangle Grid.Row="8" HorizontalAlignment="Stretch" Stroke="Black" VerticalAlignment="Stretch" Width="80" Fill="White"/>
+                    <Rectangle Grid.Row="9" HorizontalAlignment="Stretch" Stroke="Black" VerticalAlignment="Stretch" Width="80" Fill="Black"/>
+                    <Rectangle Grid.Row="10" HorizontalAlignment="Stretch" Stroke="Black" VerticalAlignment="Stretch" Width="80" Fill="White"/>
+                    <Rectangle Grid.Row="11" HorizontalAlignment="Stretch" Stroke="Black" VerticalAlignment="Stretch" Width="80" Fill="Black"/>
+                    <Rectangle Grid.Row="12" HorizontalAlignment="Stretch" Stroke="Black" VerticalAlignment="Stretch" Width="80" Fill="White"/>
+                    <TextBlock Margin="0,0,3,0" TextAlignment="Right" Text="7" Grid.Row="12"/>
+                    <Rectangle Grid.Row="13" HorizontalAlignment="Stretch" Stroke="Black" VerticalAlignment="Stretch" Width="80" Fill="White"/>
+                    <Rectangle Grid.Row="14" HorizontalAlignment="Stretch" Stroke="Black" VerticalAlignment="Stretch" Width="80" Fill="Black"/>
+                    <Rectangle Grid.Row="15" HorizontalAlignment="Stretch" Stroke="Black" VerticalAlignment="Stretch" Width="80" Fill="White"/>
+                    <Rectangle Grid.Row="16" HorizontalAlignment="Stretch" Stroke="Black" VerticalAlignment="Stretch" Width="80" Fill="Black"/>
+                    <Rectangle Grid.Row="17" HorizontalAlignment="Stretch" Stroke="Black" VerticalAlignment="Stretch" Width="80" Fill="White"/>
+                    <Rectangle Grid.Row="18" HorizontalAlignment="Stretch" Stroke="Black" VerticalAlignment="Stretch" Width="80" Fill="Black"/>
+                    <Rectangle Grid.Row="19" HorizontalAlignment="Stretch" Stroke="Black" VerticalAlignment="Stretch" Width="80" Fill="White"/>
+                    <Rectangle Grid.Row="20" HorizontalAlignment="Stretch" Stroke="Black" VerticalAlignment="Stretch" Width="80" Fill="White"/>
+                    <Rectangle Grid.Row="21" HorizontalAlignment="Stretch" Stroke="Black" VerticalAlignment="Stretch" Width="80" Fill="Black"/>
+                    <Rectangle Grid.Row="22" HorizontalAlignment="Stretch" Stroke="Black" VerticalAlignment="Stretch" Width="80" Fill="White"/>
+                    <Rectangle Grid.Row="23" HorizontalAlignment="Stretch" Stroke="Black" VerticalAlignment="Stretch" Width="80" Fill="Black"/>
+                    <Rectangle Grid.Row="24" HorizontalAlignment="Stretch" Stroke="Black" VerticalAlignment="Stretch" Width="80" Fill="White"/>
+                    <TextBlock Margin="0,0,3,0" TextAlignment="Right" Text="6" Grid.Row="24"/>
+                    <Rectangle Grid.Row="25" HorizontalAlignment="Stretch" Stroke="Black" VerticalAlignment="Stretch" Width="80" Fill="White"/>
+                    <Rectangle Grid.Row="26" HorizontalAlignment="Stretch" Stroke="Black" VerticalAlignment="Stretch" Width="80" Fill="Black"/>
+                    <Rectangle Grid.Row="27" HorizontalAlignment="Stretch" Stroke="Black" VerticalAlignment="Stretch" Width="80" Fill="White"/>
+                    <Rectangle Grid.Row="28" HorizontalAlignment="Stretch" Stroke="Black" VerticalAlignment="Stretch" Width="80" Fill="Black"/>
+                    <Rectangle Grid.Row="29" HorizontalAlignment="Stretch" Stroke="Black" VerticalAlignment="Stretch" Width="80" Fill="White"/>
+                    <Rectangle Grid.Row="30" HorizontalAlignment="Stretch" Stroke="Black" VerticalAlignment="Stretch" Width="80" Fill="Black"/>
+                    <Rectangle Grid.Row="31" HorizontalAlignment="Stretch" Stroke="Black" VerticalAlignment="Stretch" Width="80" Fill="White"/>
+                    <Rectangle Grid.Row="32" HorizontalAlignment="Stretch" Stroke="Black" VerticalAlignment="Stretch" Width="80" Fill="White"/>
+                    <Rectangle Grid.Row="33" HorizontalAlignment="Stretch" Stroke="Black" VerticalAlignment="Stretch" Width="80" Fill="Black"/>
+                    <Rectangle Grid.Row="34" HorizontalAlignment="Stretch" Stroke="Black" VerticalAlignment="Stretch" Width="80" Fill="White"/>
+                    <Rectangle Grid.Row="35" HorizontalAlignment="Stretch" Stroke="Black" VerticalAlignment="Stretch" Width="80" Fill="Black"/>
+                    <Rectangle Grid.Row="36" HorizontalAlignment="Stretch" Stroke="Black" VerticalAlignment="Stretch" Width="80" Fill="White"/>
+                    <TextBlock Margin="0,0,3,0" TextAlignment="Right" Text="5" Grid.Row="36"/>
+                    <Rectangle Grid.Row="37" HorizontalAlignment="Stretch" Stroke="Black" VerticalAlignment="Stretch" Width="80" Fill="White"/>
+                    <Rectangle Grid.Row="38" HorizontalAlignment="Stretch" Stroke="Black" VerticalAlignment="Stretch" Width="80" Fill="Black"/>
+                    <Rectangle Grid.Row="39" HorizontalAlignment="Stretch" Stroke="Black" VerticalAlignment="Stretch" Width="80" Fill="White"/>
+                    <Rectangle Grid.Row="40" HorizontalAlignment="Stretch" Stroke="Black" VerticalAlignment="Stretch" Width="80" Fill="Black"/>
+                    <Rectangle Grid.Row="41" HorizontalAlignment="Stretch" Stroke="Black" VerticalAlignment="Stretch" Width="80" Fill="White"/>
+                    <Rectangle Grid.Row="42" HorizontalAlignment="Stretch" Stroke="Black" VerticalAlignment="Stretch" Width="80" Fill="Black"/>
+                    <Rectangle Grid.Row="43" HorizontalAlignment="Stretch" Stroke="Black" VerticalAlignment="Stretch" Width="80" Fill="White"/>
+                    <Rectangle Grid.Row="44" HorizontalAlignment="Stretch" Stroke="Black" VerticalAlignment="Stretch" Width="80" Fill="White"/>
+                    <Rectangle Grid.Row="45" HorizontalAlignment="Stretch" Stroke="Black" VerticalAlignment="Stretch" Width="80" Fill="Black"/>
+                    <Rectangle Grid.Row="46" HorizontalAlignment="Stretch" Stroke="Black" VerticalAlignment="Stretch" Width="80" Fill="White"/>
+                    <Rectangle Grid.Row="47" HorizontalAlignment="Stretch" Stroke="Black" VerticalAlignment="Stretch" Width="80" Fill="Black"/>
+                    <Rectangle Grid.Row="48" HorizontalAlignment="Stretch" Stroke="Black" VerticalAlignment="Stretch" Width="80" Fill="White"/>
+                    <TextBlock Margin="0,0,3,0" TextAlignment="Right" Text="4" Grid.Row="48"/>
+                    <Rectangle Grid.Row="49" HorizontalAlignment="Stretch" Stroke="Black" VerticalAlignment="Stretch" Width="80" Fill="White"/>
+                    <Rectangle Grid.Row="50" HorizontalAlignment="Stretch" Stroke="Black" VerticalAlignment="Stretch" Width="80" Fill="Black"/>
+                    <Rectangle Grid.Row="51" HorizontalAlignment="Stretch" Stroke="Black" VerticalAlignment="Stretch" Width="80" Fill="White"/>
+                    <Rectangle Grid.Row="52" HorizontalAlignment="Stretch" Stroke="Black" VerticalAlignment="Stretch" Width="80" Fill="Black"/>
+                    <Rectangle Grid.Row="53" HorizontalAlignment="Stretch" Stroke="Black" VerticalAlignment="Stretch" Width="80" Fill="White"/>
+                    <Rectangle Grid.Row="54" HorizontalAlignment="Stretch" Stroke="Black" VerticalAlignment="Stretch" Width="80" Fill="Black"/>
+                    <Rectangle Grid.Row="55" HorizontalAlignment="Stretch" Stroke="Black" VerticalAlignment="Stretch" Width="80" Fill="White"/>
+                    <Rectangle Grid.Row="56" HorizontalAlignment="Stretch" Stroke="Black" VerticalAlignment="Stretch" Width="80" Fill="White"/>
+                    <Rectangle Grid.Row="57" HorizontalAlignment="Stretch" Stroke="Black" VerticalAlignment="Stretch" Width="80" Fill="Black"/>
+                    <Rectangle Grid.Row="58" HorizontalAlignment="Stretch" Stroke="Black" VerticalAlignment="Stretch" Width="80" Fill="White"/>
+                    <Rectangle Grid.Row="59" HorizontalAlignment="Stretch" Stroke="Black" VerticalAlignment="Stretch" Width="80" Fill="Black"/>
+                    <Rectangle Grid.Row="60" HorizontalAlignment="Stretch" Stroke="Black" VerticalAlignment="Stretch" Width="80" Fill="White"/>
+                    <TextBlock Margin="0,0,3,0" TextAlignment="Right" Text="3" Grid.Row="60"/>
+                    <Rectangle Grid.Row="61" HorizontalAlignment="Stretch" Stroke="Black" VerticalAlignment="Stretch" Width="80" Fill="White"/>
+                    <Rectangle Grid.Row="62" HorizontalAlignment="Stretch" Stroke="Black" VerticalAlignment="Stretch" Width="80" Fill="Black"/>
+                    <Rectangle Grid.Row="63" HorizontalAlignment="Stretch" Stroke="Black" VerticalAlignment="Stretch" Width="80" Fill="White"/>
+                    <Rectangle Grid.Row="64" HorizontalAlignment="Stretch" Stroke="Black" VerticalAlignment="Stretch" Width="80" Fill="Black"/>
+                    <Rectangle Grid.Row="65" HorizontalAlignment="Stretch" Stroke="Black" VerticalAlignment="Stretch" Width="80" Fill="White"/>
+                    <Rectangle Grid.Row="66" HorizontalAlignment="Stretch" Stroke="Black" VerticalAlignment="Stretch" Width="80" Fill="Black"/>
+                    <Rectangle Grid.Row="67" HorizontalAlignment="Stretch" Stroke="Black" VerticalAlignment="Stretch" Width="80" Fill="White"/>
+                    <Rectangle Grid.Row="68" HorizontalAlignment="Stretch" Stroke="Black" VerticalAlignment="Stretch" Width="80" Fill="White"/>
+                    <Rectangle Grid.Row="69" HorizontalAlignment="Stretch" Stroke="Black" VerticalAlignment="Stretch" Width="80" Fill="Black"/>
+                    <Rectangle Grid.Row="70" HorizontalAlignment="Stretch" Stroke="Black" VerticalAlignment="Stretch" Width="80" Fill="White"/>
+                    <Rectangle Grid.Row="71" HorizontalAlignment="Stretch" Stroke="Black" VerticalAlignment="Stretch" Width="80" Fill="Black"/>
+                    <Rectangle Grid.Row="72" HorizontalAlignment="Stretch" Stroke="Black" VerticalAlignment="Stretch" Width="80" Fill="White"/>
+                    <TextBlock Margin="0,0,3,0" TextAlignment="Right" Text="2" Grid.Row="72"/>
+                    <Rectangle Grid.Row="73" HorizontalAlignment="Stretch" Stroke="Black" VerticalAlignment="Stretch" Width="80" Fill="White"/>
+                    <Rectangle Grid.Row="74" HorizontalAlignment="Stretch" Stroke="Black" VerticalAlignment="Stretch" Width="80" Fill="Black"/>
+                    <Rectangle Grid.Row="75" HorizontalAlignment="Stretch" Stroke="Black" VerticalAlignment="Stretch" Width="80" Fill="White"/>
+                    <Rectangle Grid.Row="76" HorizontalAlignment="Stretch" Stroke="Black" VerticalAlignment="Stretch" Width="80" Fill="Black"/>
+                    <Rectangle Grid.Row="77" HorizontalAlignment="Stretch" Stroke="Black" VerticalAlignment="Stretch" Width="80" Fill="White"/>
+                    <Rectangle Grid.Row="78" HorizontalAlignment="Stretch" Stroke="Black" VerticalAlignment="Stretch" Width="80" Fill="Black"/>
+                    <Rectangle Grid.Row="79" HorizontalAlignment="Stretch" Stroke="Black" VerticalAlignment="Stretch" Width="80" Fill="White"/>
+                    <Rectangle Grid.Row="80" HorizontalAlignment="Stretch" Stroke="Black" VerticalAlignment="Stretch" Width="80" Fill="White"/>
+                    <Rectangle Grid.Row="81" HorizontalAlignment="Stretch" Stroke="Black" VerticalAlignment="Stretch" Width="80" Fill="Black"/>
+                    <Rectangle Grid.Row="82" HorizontalAlignment="Stretch" Stroke="Black" VerticalAlignment="Stretch" Width="80" Fill="White"/>
+                    <Rectangle Grid.Row="83" HorizontalAlignment="Stretch" Stroke="Black" VerticalAlignment="Stretch" Width="80" Fill="Black"/>
+                    <Rectangle Grid.Row="84" HorizontalAlignment="Stretch" Stroke="Black" VerticalAlignment="Stretch" Width="80" Fill="White"/>
+                    <TextBlock Margin="0,0,3,0" TextAlignment="Right" Text="1" Grid.Row="84"/>
+                    <Rectangle Grid.Row="85" HorizontalAlignment="Stretch" Stroke="Black" VerticalAlignment="Stretch" Width="80" Fill="White"/>
+                    <Rectangle Grid.Row="86" HorizontalAlignment="Stretch" Stroke="Black" VerticalAlignment="Stretch" Width="80" Fill="Black"/>
+                    <Rectangle Grid.Row="87" HorizontalAlignment="Stretch" Stroke="Black" VerticalAlignment="Stretch" Width="80" Fill="White"/>
+                </Grid>
+            </ScrollViewer>
+            <ScrollViewer x:Name="pianoRollScrollViewer" HorizontalScrollBarVisibility="Visible" DockPanel.Dock="Right" MinWidth="200" MinHeight="200" ScrollChanged="ScrollViewer_ScrollChanged" Width="1120">
+                <Grid x:Name="pianoRollGrid" Height="2024" Width="2000" HorizontalAlignment="Left" VerticalAlignment="Top" ShowGridLines="True" Background="#00000000" PreviewMouseLeftButtonDown="OnPreviewMouseLeftButtonDown" PreviewMouseLeftButtonUp="pianoRollGrid_PreviewMouseLeftButtonUp">
+                    <Grid.RowDefinitions>
+                        <RowDefinition/>
+                        <RowDefinition/>
+                        <RowDefinition/>
+                        <RowDefinition/>
+                        <RowDefinition/>
+                        <RowDefinition/>
+                        <RowDefinition/>
+                        <RowDefinition/>
+                        <RowDefinition/>
+                        <RowDefinition/>
+                        <RowDefinition/>
+                        <RowDefinition/>
+                        <RowDefinition/>
+                        <RowDefinition/>
+                        <RowDefinition/>
+                        <RowDefinition/>
+                        <RowDefinition/>
+                        <RowDefinition/>
+                        <RowDefinition/>
+                        <RowDefinition/>
+                        <RowDefinition/>
+                        <RowDefinition/>
+                        <RowDefinition/>
+                        <RowDefinition/>
+                        <RowDefinition/>
+                        <RowDefinition/>
+                        <RowDefinition/>
+                        <RowDefinition/>
+                        <RowDefinition/>
+                        <RowDefinition/>
+                        <RowDefinition/>
+                        <RowDefinition/>
+                        <RowDefinition/>
+                        <RowDefinition/>
+                        <RowDefinition/>
+                        <RowDefinition/>
+                        <RowDefinition/>
+                        <RowDefinition/>
+                        <RowDefinition/>
+                        <RowDefinition/>
+                        <RowDefinition/>
+                        <RowDefinition/>
+                        <RowDefinition/>
+                        <RowDefinition/>
+                        <RowDefinition/>
+                        <RowDefinition/>
+                        <RowDefinition/>
+                        <RowDefinition/>
+                        <RowDefinition/>
+                        <RowDefinition/>
+                        <RowDefinition/>
+                        <RowDefinition/>
+                        <RowDefinition/>
+                        <RowDefinition/>
+                        <RowDefinition/>
+                        <RowDefinition/>
+                        <RowDefinition/>
+                        <RowDefinition/>
+                        <RowDefinition/>
+                        <RowDefinition/>
+                        <RowDefinition/>
+                        <RowDefinition/>
+                        <RowDefinition/>
+                        <RowDefinition/>
+                        <RowDefinition/>
+                        <RowDefinition/>
+                        <RowDefinition/>
+                        <RowDefinition/>
+                        <RowDefinition/>
+                        <RowDefinition/>
+                        <RowDefinition/>
+                        <RowDefinition/>
+                        <RowDefinition/>
+                        <RowDefinition/>
+                        <RowDefinition/>
+                        <RowDefinition/>
+                        <RowDefinition/>
+                        <RowDefinition/>
+                        <RowDefinition/>
+                        <RowDefinition/>
+                        <RowDefinition/>
+                        <RowDefinition/>
+                        <RowDefinition/>
+                        <RowDefinition/>
+                        <RowDefinition/>
+                        <RowDefinition/>
+                        <RowDefinition/>
+                        <RowDefinition/>
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition/>
+                        <ColumnDefinition/>
+                        <ColumnDefinition/>
+                        <ColumnDefinition/>
+                        <ColumnDefinition/>
+                        <ColumnDefinition/>
+                        <ColumnDefinition/>
+                        <ColumnDefinition/>
+                        <ColumnDefinition/>
+                        <ColumnDefinition/>
+                        <ColumnDefinition/>
+                        <ColumnDefinition/>
+                        <ColumnDefinition/>
+                        <ColumnDefinition/>
+                        <ColumnDefinition/>
+                        <ColumnDefinition/>
+                        <ColumnDefinition/>
+                        <ColumnDefinition/>
+                        <ColumnDefinition/>
+                        <ColumnDefinition/>
+                    </Grid.ColumnDefinitions>
+                </Grid>
+            </ScrollViewer>
+        </StackPanel>
+    </DockPanel>
+</Window>

@@ -1,0 +1,29 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.31729.503
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WpfApp1", "WpfApp1\WpfApp1.csproj", "{C643EB51-9AD5-4CC8-A715-F826AFC2BFFF}"
+EndProject
+Project("{54435603-DBB4-11D2-8724-00A0C9A8B90C}") = "Singing Synth", "Singing Synth\Singing Synth.vdproj", "{D4CE79CE-1522-4452-A0B0-E1DC67EBBC0F}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{C643EB51-9AD5-4CC8-A715-F826AFC2BFFF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C643EB51-9AD5-4CC8-A715-F826AFC2BFFF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C643EB51-9AD5-4CC8-A715-F826AFC2BFFF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C643EB51-9AD5-4CC8-A715-F826AFC2BFFF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D4CE79CE-1522-4452-A0B0-E1DC67EBBC0F}.Debug|Any CPU.ActiveCfg = Debug
+		{D4CE79CE-1522-4452-A0B0-E1DC67EBBC0F}.Release|Any CPU.ActiveCfg = Release
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {F8D84EBC-702E-4E6C-A0C9-FFF4CD8B39FF}
+	EndGlobalSection
+EndGlobal
